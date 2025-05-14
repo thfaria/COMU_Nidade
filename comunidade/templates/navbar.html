@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid container">
+      <!-- url_for permite que o link seja formado a partir do nome da função na página main.py, evitando quebra de links devido a troca de nomes de páginas -->
+      <a class="navbar-brand" href="{{ url_for('home') }}">COMU Nidade</a>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Início</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('usuarios') }}">Usuários</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('contatos') }}">Contatos</a>
+          </li>
+        </ul>
+        <UL class="d-flex navbar-nav">
+            <!-- Verifica se existe um usuário logado no site e apresenta os botões correspondentes -->
+            {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('criar_post') }}">Criar Post</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('perfil') }}">Meu Perfil</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+            {% else %}
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('login') }}">Criar Conta</a>
+              </li>
+            {% endif %}
+        </UL>
+      </div>
+    </div>
+  </nav>

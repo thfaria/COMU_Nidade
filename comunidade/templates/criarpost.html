@@ -1,0 +1,55 @@
+{% extends 'base.html'%}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <form method="POST" action="" class="border p-4 mt-2">
+                <!-- Importação da chave de segurança para o formulário -->
+                {{ form_criarpost.csrf_token }}
+                <legend class="text-center">Criar Post</legend>
+                <fieldset>
+                    <div class="form-group mt-2">
+                        {{ form_criarpost.titulo.label(class='form-control-label') }} <!-- Importação do label dos campos diretamente do formulário -->
+                        <!-- Verifica se o validation aplicado ao campo na página forms.py identificou algum erro de preenchimento do campo -->
+                        {% if form_criarpost.titulo.errors %}
+                            <!-- Se há erros o campo fica destacado como inválido -->
+                            {{ form_criarpost.titulo(class='form-control is-invalid') }}
+                            <div class="invalid-feedback">
+                                <!-- E percorre-se a lista de erros apresentando os mesmos -->
+                                {% for erro in form_criarpost.titulo.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- Caso contrário o campo é apresentado de forma normal -->
+                            {{ form_criarpost.titulo(class='form-control') }} <!-- Importação dos campos diretamente do formulário -->
+                        {% endif %}
+                    </div>
+                    <div class="form-group mt-2">
+                        {{ form_criarpost.corpo.label(class='form-control-label') }} <!-- Importação do label dos campos diretamente do formulário -->
+                        <!-- Verifica se o validation aplicado ao campo na página forms.py identificou algum erro de preenchimento do campo -->
+                        {% if form_criarpost.corpo.errors %}
+                            <!-- Se há erros o campo fica destacado como inválido -->
+                            {{ form_criarpost.corpo(class='form-control is-invalid') }}
+                            <div class="invalid-feedback">
+                                <!-- E percorre-se a lista de erros apresentando os mesmos -->
+                                {% for erro in form_criarpost.corpo.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- Caso contrário o campo é apresentado de forma normal -->
+                            {{ form_criarpost.corpo(class='form-control') }} <!-- Importação dos campos diretamente do formulário -->
+                        {% endif %}
+                    </div>
+                </fieldset>
+                <div class="container text-end">
+                    <!-- Importação do botão do formulário -->
+                    {{ form_criarpost.botao_submit_post(class='btn btn-primary mt-2') }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

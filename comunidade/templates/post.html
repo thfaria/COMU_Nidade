@@ -1,0 +1,96 @@
+{% extends 'base.html'%}
+
+{% block body %}
+    <div class="container mt-3">
+        <div class="row border mt-4 p-3 postbackend"> <!--Utilizando a classe postbackend criada por mim diretamente no main.css-->
+            <div class="col col-2 text-center">
+                <h4>{{ post.autor.username }}</h4>
+                <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(post.autor.foto_perfil)) }}" class="rounded" width="200" >
+                {% for curso in post.autor.cursos.split(';') %}
+                    <button type="button" class="btn btn-success btn-sm mt-2" disabled>{{ curso }}</button>
+                {% endfor%}
+            </div>
+            <div class="col col-10">
+                <small class="text-muted">Postado em {{ post.data_criacao.strftime('%d/%m/%Y') }}</small>
+                <!-- Se o form_editar_post estiver preenchido é porque o usuário logado é dono do post e por isso pode editá-lo-->
+                {% if form_editarpost %}
+                    <form method="POST" action="">
+                    <!-- Importação da chave de segurança para o formulário -->
+                    {{ form_editarpost.csrf_token }}
+                        <fieldset>
+                            <div class="form-group mt-2">
+                                {{ form_editarpost.titulo.label(class='form-control-label') }} <!-- Importação do label dos campos diretamente do formulário -->
+                                <!-- Verifica se o validation aplicado ao campo na página forms.py identificou algum erro de preenchimento do campo -->
+                                {% if form_editarpost.titulo.errors %}
+                                    <!-- Se há erros o campo fica destacado como inválido -->
+                                    {{ form_editarpost.titulo(class='form-control is-invalid') }}
+                                    <div class="invalid-feedback">
+                                        <!-- E percorre-se a lista de erros apresentando os mesmos -->
+                                        {% for erro in form_editarpost.titulo.errors %}
+                                            {{ erro }}
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <!-- Caso contrário o campo é apresentado de forma normal -->
+                                    {{ form_editarpost.titulo(class='form-control') }} <!-- Importação dos campos diretamente do formulário -->
+                                {% endif %}
+                            </div>
+                            <div class="form-group mt-2">
+                                {{ form_editarpost.corpo.label(class='form-control-label') }} <!-- Importação do label dos campos diretamente do formulário -->
+                                <!-- Verifica se o validation aplicado ao campo na página forms.py identificou algum erro de preenchimento do campo -->
+                                {% if form_editarpost.corpo.errors %}
+                                    <!-- Se há erros o campo fica destacado como inválido -->
+                                    {{ form_editarpost.corpo(class='form-control is-invalid') }}
+                                    <div class="invalid-feedback">
+                                        <!-- E percorre-se a lista de erros apresentando os mesmos -->
+                                        {% for erro in form_editarpost.corpo.errors %}
+                                            {{ erro }}
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <!-- Caso contrário o campo é apresentado de forma normal -->
+                                    {{ form_editarpost.corpo(class='form-control') }} <!-- Importação dos campos diretamente do formulário -->
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        <div class="container text-end mt-2">
+                            <!-- Importação do botão do formulário -->
+                            {{ form_editarpost.botao_submit_post(class='btn btn-primary') }}
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Excluir</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <!-- Se o usuário não for o dono do post, as infomrações são apenas exibidas -->
+                    <h3>{{ post.titulo }}</h3>
+                    <p>{{ post.corpo }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+<!-- Modal - Janela de confirmação da exclusão do Post -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Excluir Post</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Deseja continuar com a exclusão do Post?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+        <!-- Formulário para exclusão do post chama a função de excluir passando o ID do post -->
+        <form method="POST" action="{{ url_for('excluir_post', post_id=post.id) }}">
+            <button type="submit" class="btn btn-danger">Sim</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'perfil.html'%}
+
+{% block form_editar_perfil %}
+<div class="container">
+    <hr>
+    <div class="row">
+        <div class="col">
+            <form method="POST" action="" class="border p-4 mt-2" enctype="multipart/form-data"> <!-- Fundamental informar o enctype em formuarios com envio de arquivos ou o formato do mesmo n]ao será entendido pelo formulário -->
+                <!-- Importação da chave de segurança para o formulário -->
+                {{ form_perfil.csrf_token }}
+                <legend class="text-center">Editar Perfil</legend>
+                <fieldset>
+                    <div class="form-group mt-2">
+                        {{ form_perfil.username.label(class='form-control-label') }} <!-- Importação do label dos campos diretamente do formulário -->
+                        <!-- Verifica se o validation aplicado ao campo na página forms.py identificou algum erro de preenchimento do campo -->
+                        {% if form_perfil.username.errors %}
+                            <!-- Se há erros o campo fica destacado como inválido -->
+                            {{ form_perfil.username(class='form-control is-invalid') }}
+                            <div class="invalid-feedback">
+                                <!-- E percorre-se a lista de erros apresentando os mesmos -->
+                                {% for erro in form_perfil.username.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- Caso contrário o campo é apresentado de forma normal -->
+                            {{ form_perfil.username(class='form-control') }} <!-- Importação dos campos diretamente do formulário -->
+                        {% endif %}
+                    </div>
+                    <div class="form-group mt-2">
+                        {{ form_perfil.email.label(class='form-control-label') }} <!-- Importação do label dos campos diretamente do formulário -->
+                        <!-- Verifica se o validation aplicado ao campo na página forms.py identificou algum erro de preenchimento do campo -->
+                        {% if form_perfil.email.errors %}
+                            <!-- Se há erros o campo fica destacado como inválido -->
+                            {{ form_perfil.email(class='form-control is-invalid') }}
+                            <div class="invalid-feedback">
+                                <!-- E percorre-se a lista de erros apresentando os mesmos -->
+                                {% for erro in form_perfil.email.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- Caso contrário o campo é apresentado de forma normal -->
+                            {{ form_perfil.email(class='form-control') }} <!-- Importação dos campos diretamente do formulário -->
+                        {% endif %}
+                    </div>
+                    <div class="form-group mt-2">
+                        {{ form_perfil.foto_perfil.label }}<br>
+                        {{ form_perfil.foto_perfil() }}
+                        {% if form_perfil.foto_perfil.errors %}
+                            {% for erro in form_perfil.foto_perfil.errors %}
+                                <br><span class="text-danger">{{ erro }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <hr>
+                    <p>Cursos</p>
+                    <!-- Criando os campos dos cursos de forma dinâmica -->
+                        {% for objeto in form_perfil %} <!--pega todos os campos presentes no formulário -->
+                            {% if 'curso_' in objeto.name %} <!-- Se o nome desse objeto for 'curso' é o campo que queremos apresentar -->
+                                <div class="form-group">
+                                    <!-- Verifica se o curso da vez esta entre os cursos do usuário, marcando ou não o campo -->
+                                    {% if objeto.label.text in current_user.cursos %}
+                                        {{ objeto(class='form-check-input', checked='')}} 
+                                    {% else %}
+                                        {{ objeto(class='form-check-input') }}
+                                    {% endif %}
+                                    {{ objeto.label(class='form-check-label')}}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                </fieldset>
+                <div class="container text-end">
+                    <!-- Importação do botão do formulário -->
+                    {{ form_perfil.botao_submit_editarperfil(class='btn btn-primary mt-2') }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -60,7 +60,7 @@ def login():
         
     if form_criarconta.validate_on_submit() and 'botao_submit_criarconta' in request.form:
         # CRIAÇÂO DO USUÁRIO
-        senha_crypt = bcrypt.generate_password_hash(form_criarconta.senha.data) # Criptografando a senha do usuário
+        senha_crypt = bcrypt.generate_password_hash(form_criarconta.senha.data).decode('utf-8') # Criptografando a senha do usuário. Utilização do decode por conta do banco Postgres do servidor web que realiza encode e decode dos textos que são armazenados, o que atrapalha a criptografia implementeda pelo bcrypt
         novo_usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha_crypt)
         database.session.add(novo_usuario)
         database.session.commit()

@@ -2,12 +2,18 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+import os
 
 # Configurações de APP
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '1e91b3613e9dc38444e4a83a7f1c626b' # Chave de segurança dos formulários 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db' # Configuração do banco de dados
+
+# Definição do local do Banco de dados 
+if os.getenv('DATABASE_URL'): # Caso a variável de ambiente DATABASE_URL esteja definida
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL') # O banco de dados será o que estiver definido nela
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db' # ConfiguraçãoCaso contrário pega um caminho local
 
 # Associação do Banco de Dados ao site
 database = SQLAlchemy(app)
